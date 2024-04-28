@@ -39,7 +39,6 @@
   <script src="./static/js/bulma-carousel.min.js"></script>
   <script src="./static/js/bulma-slider.min.js"></script>
   <script src="./static/js/index.js"></script>
-  <script src="./static/js/script.js"></script>
   <!-- <script type="text/javascript" src="./gb3d_bundle.js"></script> -->
   
 </head>
@@ -774,68 +773,130 @@
 </section>
 
 <section class="section">
-  <div class="container is-max-desktop">
+    <div class="container is-max-desktop">
+        <h2 class="title is-3">Visual Comparisons</h2>
+        <div class="content has-text-justified">
+          <p>
 
-    <!-- Method. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3" style="margin-top: -20px">Image Results</h2>
-        <div class="tabs">
-              <div class="tab" data-tab-for="example1,example2" onclick="showExamples('example1', 'example2', this)">DIP</div>
-              <div class="tab" data-tab-for="example3,example4" onclick="showExamples('example3', 'example4', this)">BM3D</div>
-              <div class="tab" data-tab-for="example5,example6" onclick="showExamples('example5', 'example6', this)">ZS-N2N</div>
-            </div>
-        <div class="column">
-          <div id="example1" class="bal-container-small example">
-    ∂
-              <div class="bal-after">
-                <img src="resources/Ours_4.tif">
-                <div class="bal-afterPosition afterLabel" style="z-index:1;">
-                  Ours
-                </div>
-              </div>
-
-              <div class="bal-before" style="width:1.910828025477707%;">
-                <div class="bal-before-inset" style="width: 628px;">
-                <img src="resources/DIP_4.tif">
-                  <div class="bal-beforePosition beforeLabel">
-                    DIP [ ]
-                  </div>
-                </div>
-              </div>
-
-              <div class="bal-handle" style="left:1.910828025477707%;">
-                <span class=" handle-left-arrow"></span>
-                <span class="handle-right-arrow"></span>
-              </div>
-            </div>
-          <div id="example2" class="bal-container-small example">
-    ∂
-              <div class="bal-after">
-                <img src="resources/Ours_4.tif">
-                <div class="bal-afterPosition afterLabel" style="z-index:1;">
-                  Ours
-                </div>
-              </div>
-
-              <div class="bal-before" style="width:1.910828025477707%;">
-                <div class="bal-before-inset" style="width: 628px;">
-                <img src="resources/DIP_4.tif">
-                  <div class="bal-beforePosition beforeLabel">
-                    DIP [ ]
-                  </div>
-                </div>
-              </div>
-
-              <div class="bal-handle" style="left:1.910828025477707%;">
-                <span class=" handle-left-arrow"></span>
-                <span class="handle-right-arrow"></span>
-              </div>
-            </div>
+          </p>
         </div>
+        <div class="columns is-centered">
+          <div class="column">
+            <div class="content">
+              <div class="columns is-centered">
+                <div class="column is-full-width">
+                  <div id="comp1" class="bal-container-smaller">
 
-      </div>
+                    <div class="bal-after">
+                      <img src="resources/Ours_4.tif">
+                      <div class="bal-afterPosition afterLabel">
+                        Ours
+                      </div>
+                    </div>
+
+                    <div class="bal-before">
+                      <div class="bal-before-inset-smaller">
+                      <img src="resources/DIP_4.tif">
+                        <div class="bal-beforePosition beforeLabel">
+                          DIP
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="bal-handle">
+                      <span class=" handle-left-arrow"></span>
+                      <span class="handle-right-arrow"></span>
+                    </div>
+
+                  </div>
+                  <div id="comp11" class="bal-container-smaller">
+
+                    <div class="bal-after">
+                      <img src="resources/Ours_4.tif">
+                      <div class="bal-afterPosition afterLabel">
+                        Ours
+                      </div>
+                    </div>
+
+                    <div class="bal-before">
+                      <div class="bal-before-inset-smaller">
+                      <img src="resources/BM3D_4.tif">
+                        <div class="bal-beforePosition beforeLabel">
+                          BM3D
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="bal-handle">
+                      <span class=" handle-left-arrow"></span>
+                      <span class="handle-right-arrow"></span>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="content">
+              <div class="columns is-centered">
+                <div class="column is-full-width">
+                  <div id="comp2" class="bal-container-smaller">
+
+                    <div class="bal-after">
+                      <img src="resources/Ours_4.tif">
+                      <div class="bal-afterPosition afterLabel">
+                        Ours
+                      </div>
+                    </div>
+
+                    <div class="bal-before">
+                      <div class="bal-before-inset-smaller">
+                      <img src="resources/ZS-N2N_4.tif">
+                        <div class="bal-beforePosition beforeLabel">
+                          ZS-N2N
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="bal-handle">
+                      <span class=" handle-left-arrow"></span>
+                      <span class="handle-right-arrow"></span>
+                    </div>
+
+                  </div>
+                  <div id="comp22" class="bal-container-smaller">
+
+                    <div class="bal-after">
+                      <img src="resources/Ours_4.tif">
+                      <div class="bal-afterPosition afterLabel">
+                        Ours
+                      </div>
+                    </div>
+
+                    <div class="bal-before">
+                      <div class="bal-before-inset-smaller">
+                      <img src="resources/noisy_4.tif">
+                        <div class="bal-beforePosition beforeLabel">
+                          Noisy
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="bal-handle">
+                      <span class=" handle-left-arrow"></span>
+                      <span class="handle-right-arrow"></span>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
     </div>
+
   </div>
 </section>>
 
@@ -868,6 +929,23 @@
   </div>
 </footer>
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+<script src="static/js/script.js"></script>
+
+<script>
+    new BeforeAfterSmaller({
+        id: '#comp1'
+    });
+    new BeforeAfterSmaller({
+        id: '#comp2'
+    });
+    new BeforeAfterSmaller({
+        id: '#comp11'
+    });
+    new BeforeAfterSmaller({
+        id: '#comp22'
+    });
+</script>
 
 </body>
 </html>
