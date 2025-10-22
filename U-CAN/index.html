@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="U-CAN: Unsupervised Point Cloud Denoising with Consistency-Aware Noise2Noise Matching">
+  <meta name="keywords" content="U-CAN">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>U-CAN</title>
+  <link rel="stylesheet" href="./style.css">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <!-- <link rel="icon" href="./static/images/favicon.svg"> -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <!-- <script type="text/javascript" src="./gb3d_bundle.js"></script> -->
+  
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href=" ">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://github.com/junshengzhou/3DAttriFlow">
+            3DAttriFlow
+          </a>
+          <a class="navbar-item" href="https://junshengzhou.github.io/3D-OAE">
+            3D Occlusion Auto-Encoder
+          </a>
+          <a class="navbar-item" href="https://github.com/mabaorui/NeuralPull-Pytorch">
+            Neural-Pull
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">U-CAN: Unsupervised Point Cloud Denoising with Consistency-Aware Noise2Noise Matching</h1>
+          <div class="column is-full_width">
+            <h2 class="title is-4"> </h2>
+          </div>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://junshengzhou.github.io/">Junsheng Zhou</a><sup>1*</sup>
+            </span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="author-block">
+              <a href="https://gloriasze.github.io">Xingyu Shi</a><sup>1*</sup>
+            </span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="author-block">
+              <a href=" ">Haichuan Song</a><sup>2</sup>
+            </span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="author-block">
+              <a href="http://mmvc.engineering.nyu.edu/">Yi Fang</a><sup>3</sup>
+            </span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="author-block">
+              <a href="https://yushen-liu.github.io/">Yu-Shen Liu</a><sup>1</sup>
+            </span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="author-block">
+              <a href="https://h312h.github.io/">Zhizhong Han</a><sup>4</sup>
+            </span>
+          </div>
+          <div class="column is-full_width">
+            <h2 class="is-size-6">* Equal Contribution</h2>
+            <!-- <h2 class="is-size-6">(* equal contribution)  (<span>&#8224;</span> corresponding author)</h2> -->
+          </div>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>School of Software, Tsinghua University,</span>
+            <span class="author-block"><sup>2</sup>East China Normal University,</span><br>
+            <span class="author-block"><sup>3</sup>New York University Abu Dhabi,</span>
+            <span class="author-block"><sup>4</sup>Wayne State University</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- Method. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3" style="margin-top: -20px"></h2>
+
+        <img src="./resources/punet_vis.png" class="center">
+
+      </div>
+    </div>
+    <!--/ Animation. -->
+
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3" style="margin-top: -30px">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Point clouds captured by scanning sensors are often perturbed by noise, which have a highly negative impact on downstream tasks (e.g. surface reconstruction and shape understanding).
+            Previous works mostly focus on training neural networks with noisy-clean point cloud pairs for learning denoising priors, which requires extensively manual efforts.
+            In this work, we introduce U-CAN, an Unsupervised framework for point cloud denoising with Consistency-Aware Noise2Noise matching.
+            Specifically, we leverage a neural network to infer a multi-step denoising path for each point of a shape or scene with a noise to noise matching schema.
+            We achieve this by a novel loss which enables statistical reasoning on multiple noisy point cloud observations. We further introduce a novel constraint on the denoised geometry consistency for learning consistency-aware denoising patterns.
+            We justify that the proposed constraint is a general term which is not limited to 3D domain and can also contribute to the area of 2D image denoising.
+            Our evaluations under the widely used benchmarks in point cloud denoising, upsampling and image denoising show significant improvement over the state-of-the-art unsupervised methods, where U-CAN also produces comparable results with the supervised methods.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- Method. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered" style="margin-top: -20px">Visualization Results</h2>
+        <h3 class="title is-4">Point Cloud Denoising Results</h3>
+        <div class="content has-text-centered">
+          <video id="denoising-video"
+                 autoplay
+                 controls
+                 muted
+                 preload
+                 playsinline
+                 loop
+                 width="90%">
+            <source src="./resources/denoising.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <h3 class="title is-4">Point Cloud Upsampling Results</h3>
+        <div class="content has-text-centered">
+          <video id="upsampling-video"
+                 autoplay
+                 controls
+                 muted
+                 preload
+                 playsinline
+                 loop
+                 width="90%">
+            <source src="./resources/upsampling.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+
+      </div>
+    </div>
+    <!--/ Animation. -->
+
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- Method. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3" style="margin-top: -20px">Denoising Results</h2>
+      </div>
+    </div>
+  </div>
+  <div class="container is-centered">
+    <!-- <div class="container is-max-desktop"> -->
+
+      <!-- Results. -->
+    <!-- <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths"> -->
+    <div class="view-3D">
+      <p class="view-3D-title">
+          PUNet:
+      </p>
+    
+    
+      <div>
+        <!-- <h2><strong>We reconstruct highly accurate surfaces from 10K points under ShapeNet Cars dataset.</strong></h2> -->
+        
+        <table class="dataintable">
+                <tr>
+        <th style="width:25%;">Noisy</th>
+          <th style="width:25%;">DMR-Un</th>
+          <th style="width:25%;">Score-Un</th>
+          <th style="width:25%;">Ours</th>
+        </tr>
+        <tr>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/noisy_duck.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/dmr-un_duck.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/score-un_duck.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/ours_duck.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+        </tr>
+          <tr>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/noisy_quadric.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/dmr-un_quadric.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/score-un_quadric.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/ours_quadric.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+        </tr>
+          <tr>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/noisy_star.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/dmr-un_star.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/score-un_star.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/ours_star.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+        </tr>
+
+
+        
+        </table>
+      </div>
+      <p class="view-3D-title">
+        Different types of noise:
+      </p>
+      <div>
+        <!-- <h2><strong>Surface reconstruction of a real scanned scene.</strong></h2> -->
+        <h4>Impulsive Noise</h4>
+        <table class="dataintable">
+                <tr>
+        <th style="width:25%;">Noisy</th>
+          <th style="width:25%;">DMR-Un</th>
+          <th style="width:25%;">Score-Un</th>
+          <th style="width:25%;">Ours</th>
+        </tr>
+        <tr>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/noisy_chair.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/dmr-un_chair.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/score-un_chair.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/ours_chair.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+        </tr>
+                  <tr>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/noisy_cow.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/dmr-un_cow.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/score-un_cow.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/ours_cow.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+        </tr>
+
+
+        
+        </table>
+        <h4>Uniform Noise</h4>
+        <table class="dataintable">
+                <tr>
+        <th style="width:25%;">Noisy</th>
+          <th style="width:25%;">DMR-Un</th>
+          <th style="width:25%;">Score-Un</th>
+          <th style="width:25%;">Ours</th>
+        </tr>
+        <tr>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/noisy_elephant.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/dmr-un_elephant.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/score-un_elephant.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/ours_elephant.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+        </tr>
+                  <tr>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/noisy_sculpt.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/dmr-un_sculpt.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/score-un_sculpt.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/ours_sculpt.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+        </tr>
+
+
+
+        </table>
+        <h4>LiDAR Noise</h4>
+        <table class="dataintable">
+                <tr>
+        <th style="width:25%;">Noisy</th>
+          <th style="width:25%;">DMR-Un</th>
+          <th style="width:25%;">Score-Un</th>
+          <th style="width:25%;">Ours</th>
+        </tr>
+        <tr>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/noisy_kitten.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/dmr-un_kitten.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/score-un_kitten.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/ours_kitten.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+        </tr>
+                  <tr>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/noisy_camel.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/dmr-un_camel.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/score-un_camel.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+          <td>
+            <model-viewer
+            bounds="tight"
+            enable-pan
+            src="./objects/ours_camel.glb"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            shadow-intensity="1"
+            camera-orbit="auto auto 180deg"
+            />
+          </td>
+        </tr>
+
+
+
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+    <div class="container is-max-desktop">
+        <h2 class="title is-3">Visual Comparisons</h2>
+        <div class="content has-text-justified">
+          <p>
+
+          </p>
+        </div>
+        <div class="columns is-centered">
+          <div class="column">
+            <div class="content">
+              <div class="columns is-centered">
+                <div class="column is-full-width">
+                  <div id="comp1" class="bal-container-smaller">
+
+                    <div class="bal-after">
+                      <img src="resources/Ours_4.png">
+                      <div class="bal-afterPosition afterLabel">
+                        Ours
+                      </div>
+                    </div>
+
+                    <div class="bal-before">
+                      <div class="bal-before-inset-smaller">
+                      <img src="resources/DIP_4.png">
+                        <div class="bal-beforePosition beforeLabel">
+                          DIP
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="bal-handle">
+                      <span class=" handle-left-arrow"></span>
+                      <span class="handle-right-arrow"></span>
+                    </div>
+
+                  </div>
+                  <div id="comp11" class="bal-container-smaller">
+
+                    <div class="bal-after">
+                      <img src="resources/Ours_4.png">
+                      <div class="bal-afterPosition afterLabel">
+                        Ours
+                      </div>
+                    </div>
+
+                    <div class="bal-before">
+                      <div class="bal-before-inset-smaller">
+                      <img src="resources/BM3D_4.png">
+                        <div class="bal-beforePosition beforeLabel">
+                          BM3D
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="bal-handle">
+                      <span class=" handle-left-arrow"></span>
+                      <span class="handle-right-arrow"></span>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="content">
+              <div class="columns is-centered">
+                <div class="column is-full-width">
+                  <div id="comp2" class="bal-container-smaller">
+
+                    <div class="bal-after">
+                      <img src="resources/Ours_4.png">
+                      <div class="bal-afterPosition afterLabel">
+                        Ours
+                      </div>
+                    </div>
+
+                    <div class="bal-before">
+                      <div class="bal-before-inset-smaller">
+                      <img src="resources/ZS-N2N_4.png">
+                        <div class="bal-beforePosition beforeLabel">
+                          ZS-N2N
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="bal-handle">
+                      <span class=" handle-left-arrow"></span>
+                      <span class="handle-right-arrow"></span>
+                    </div>
+
+                  </div>
+                  <div id="comp22" class="bal-container-smaller">
+
+                    <div class="bal-after">
+                      <img src="resources/Ours_4.png">
+                      <div class="bal-afterPosition afterLabel">
+                        Ours
+                      </div>
+                    </div>
+
+                    <div class="bal-before">
+                      <div class="bal-before-inset-smaller">
+                      <img src="resources/noisy_4.png">
+                        <div class="bal-beforePosition beforeLabel">
+                          Noisy
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="bal-handle">
+                      <span class=" handle-left-arrow"></span>
+                      <span class="handle-right-arrow"></span>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+    </div>
+
+  </div>
+</section>>
+
+<!--
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@inproceedings{Zhou2022CAP-UDF,
+      title = {Learning Consistency-Aware Unsigned Distance Functions Progressively from Raw Point Clouds},
+      author = {Zhou, Junsheng and Ma, Baorui and Liu, Yu-Shen and Fang, Yi and Han, Zhizhong},
+      booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+      year = {2022}
+    }
+  </code></pre>
+  </div>
+</section>
+-->
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This webpage template is borrowed from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+<script src="static/js/script.js"></script>
+
+<script>
+    new BeforeAfterSmaller({
+        id: '#comp1'
+    });
+    new BeforeAfterSmaller({
+        id: '#comp2'
+    });
+    new BeforeAfterSmaller({
+        id: '#comp11'
+    });
+    new BeforeAfterSmaller({
+        id: '#comp22'
+    });
+</script>
+
+</body>
+</html>
